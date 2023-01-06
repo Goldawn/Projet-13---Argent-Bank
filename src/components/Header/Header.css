@@ -1,0 +1,23 @@
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+}
+
+header img {
+    max-width: 100%;
+    width: 200px;
+}
+
+header a {
+    font-weight: bold;
+    color: #2c3e50;
+    text-decoration: none;
+    margin-right: 0.5rem;
+}
+
+header a i {
+    margin-right: 5px;
+}
