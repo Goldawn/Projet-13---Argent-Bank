@@ -1,16 +1,18 @@
 import React from 'react';
-import Header from '../../components/Header/Header'
-import Footer from '../../components/Footer/Footer'
+import { useSelector } from 'react-redux'
 import FeatureItem from '../../components/FeatureItem/FeatureItem'
 import chatIcon from '../../assets/icones/icon-chat.png';
 import moneyIcon from '../../assets/icones/icon-money.png';
 import securityIcon from '../../assets/icones/icon-security.png';
 import './Home.css'
 
-const Home = () => {
+const Home = ({tokenExists}) => {
+
+    // const test = useSelector(state => console.log(state))
+    console.log(tokenExists)
+
     return (
         <div>
-            <Header />
             <main>
                 <div className="hero">
                     <section className="hero-content">
@@ -28,7 +30,6 @@ const Home = () => {
                     <FeatureItem  icon={securityIcon} title={"Security you can trust"} content={"We use top of the line encryption to make sure your data and money is always safe."}/>
                 </section>
             </main>
-            <Footer />
         </div>
     );
 };
