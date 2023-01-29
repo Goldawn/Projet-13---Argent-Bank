@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import loadData from '../../functions/loadData'
 
 
 const EditProfile = () => { 
 
-  console.log("edit profile")
+  const UserInfo = useSelector(state => state.auth.userInfo)
 
   const [profileData, setProfileData] = useState({
-    firstName: "",
-    lastName: "",
+    firstName: UserInfo.firstName,
+    lastName: UserInfo.lastName,
   })
   const navigate = useNavigate()
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const EditProfile = () => {
       [e.target.name]: e.target.value
     })
     )
-    console.log(firstName)
+    console.log(typeof profileData.firstName)
   }
 
   // on créé un formData auquel on attache toutes les informations du profil utilisateur
@@ -37,12 +37,10 @@ const EditProfile = () => {
     fetch('http://localhost:3001/api/v1/user/profile', {
         method: 'PUT',
         headers: { 
+            "Content-Type": "application/json",
             "authorization": bearer
           },
-        body: JSON.stringify({
-          firstName: firstName,
-          lastName: lastName,
-        })
+        body: JSON.stringify(profileData)
       })
       .then((res) => {
         if(res.status !== 200) {
@@ -54,7 +52,7 @@ const EditProfile = () => {
             console.log(data)
             return(data)
           })
-          // navigate('/profile')
+          navigate('/profile')
         }
       })
     }
