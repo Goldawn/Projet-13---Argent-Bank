@@ -6,10 +6,7 @@ import moneyIcon from '../../assets/icones/icon-money.png';
 import securityIcon from '../../assets/icones/icon-security.png';
 import './Home.css'
 
-const Home = ({tokenExists}) => {
-
-    // const test = useSelector(state => console.log(state))
-    console.log(tokenExists)
+const Home = ({}) => {
 
     return (
         <div>

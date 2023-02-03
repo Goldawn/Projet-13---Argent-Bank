@@ -19,6 +19,7 @@ const authSlice = createSlice({
     addUserInfo : (state, action) => {
       //exemple d'action { type: "auth/addUserInfo", payload: {email: "tony@stark.com", firstName: "Tony", lastName: "Stark"}}
       const { firstName, lastName, email } = action.payload
+      console.log("auth/adduserinfo ",initialState.token)
       state.userInfo.firstName = firstName;
       state.userInfo.lastName = lastName;
       state.userInfo.email = email;
@@ -30,7 +31,8 @@ const authSlice = createSlice({
       state.userInfo.lastName = lastName;
     },
     resetUser : (state, action) => {
-      // state = initialState
+      state.userInfo={}
+      state.userToken= null
     }
   },
   extraReducers: {},

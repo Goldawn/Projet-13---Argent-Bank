@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import saveData from '../../functions/saveData'
 import { useNavigate } from "react-router-dom";
+// import fetchData from '../../services/FetchData';
 import './Form.css';
 
 const Form = () => {
@@ -36,11 +36,13 @@ const Form = () => {
         else {
           res.json().then(data => {
             dispatch({ type: "auth/addUserToken", payload: data.body.token})
-            saveData('authToken', JSON.stringify({"token":data.body.token}))
           })
           navigate('/profile');
       }
     })
+
+    // const fetchedData = fetchData("user/login", 'POST', JSON.stringify(login))
+    // console.log(fetchedData)
   }
 
   const { email, password } = login

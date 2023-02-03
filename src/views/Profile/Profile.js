@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom";
-import loadData from '../../functions/loadData'
 import './Profile.css';
 
 const Profile = () => {
 
+    const token = useSelector(state => state.auth.userToken)
     const profileData = useSelector(state => state.auth.userInfo)
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    // On récupère le token de l'utilisateur pui on le passe en paramètre de getData
     useEffect(() => {
-        const auth = JSON.parse(loadData("authToken"))
-        const bearer = "Bearer "+auth.token
-        getData(bearer);
-    }, [])
+        if( token ) {
+            const bearer = "Bearer "+token
+            getData(bearer);
+        }
+    }, [token])
 
     const getData = (bearer) => {
 

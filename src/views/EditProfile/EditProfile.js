@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import loadData from '../../functions/loadData'
-
 
 const EditProfile = () => { 
 
   const UserInfo = useSelector(state => state.auth.userInfo)
+  const token = useSelector(state => state.auth.userToken)
 
   const [profileData, setProfileData] = useState({
     firstName: UserInfo.firstName,
@@ -30,31 +29,36 @@ const EditProfile = () => {
   // Si la réponse est favorable, l'utilisateur est redirigé vers sa nouvelle page de profil
   const submitHandler = e => {
     e.preventDefault()
+    if(profileData.firstName === "" || profileData.lastName === "") {
+      return;
+    }
+    else {
+      const bearer = "Bearer "+token
+  
+      fetch('http://localhost:3001/api/v1/user/profile', {
+          method: 'PUT',
+          headers: { 
+              "Content-Type": "application/json",
+              "authorization": bearer
+            },
+          body: JSON.stringify(profileData)
+        })
+        .then((res) => {
+          if(res.status !== 200) {
+            return(res)
+          }
+          else {
+            res.json().then(data => {
+              dispatch({ type: "auth/editUserInfo", payload: { "firstName": data.body.firstName, "lastName": data.body.lastName }})
+              console.log(data)
+              return(data)
+            })
+            navigate('/profile')
+          }
+        })
+    }
 
-    const auth = JSON.parse(loadData("authToken"))
-    const bearer = "Bearer "+auth.token
 
-    fetch('http://localhost:3001/api/v1/user/profile', {
-        method: 'PUT',
-        headers: { 
-            "Content-Type": "application/json",
-            "authorization": bearer
-          },
-        body: JSON.stringify(profileData)
-      })
-      .then((res) => {
-        if(res.status !== 200) {
-          return(res)
-        }
-        else {
-          res.json().then(data => {
-            dispatch({ type: "auth/editUserInfo", payload: { "firstName": data.body.firstName, "lastName": data.body.lastName }})
-            console.log(data)
-            return(data)
-          })
-          navigate('/profile')
-        }
-      })
     }
 
     const { firstName, lastName } = profileData;
