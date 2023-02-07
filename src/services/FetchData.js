@@ -1,45 +1,70 @@
-import {useState, useEffect} from 'react';
-
-/**
+ /**
  * Custom Hook to recover data
  * @param { String } url - the API url
  * @returns { Object | Boolean } data, isDataLoading, error
 */
 
-const FetchData = (url, method, payload) => {
-
-    console.log("entrée dans fetchData", url, method, payload)
+const FetchData = async (url, method, payload) => {
 
     const baseURL = "http://localhost:3001/api/v1/"
     const requestURL = baseURL + url;
-    console.log(requestURL)
-    
-    const [data, setData] = useState({});
-    const [isDataLoading, setDataLoading] = useState(false);
-    const [error, setError] = useState(false);
-    
-    useEffect(() => {	
+    const { bearer, body } = payload;
 
-        setDataLoading(true);
-        async function fetchFonction() {
-            setDataLoading(true);
-            console.log("entrée dans le useEffect")
-            try {
-                const response = await fetch(requestURL, { method: method, body: payload});
-                const data = await response.json();
-                console.log(data)
-                setData(data);
-            } catch (err) {
-                setError(true);
-            } finally {
-                setDataLoading(false);
+    switch (method) {
+        case 'POST':
+            if(bearer) {
+                try {
+                    const response = await fetch(requestURL, { 
+                        method: method, 
+                        headers: { 
+                            "Content-Type": "application/json",
+                            "authorization": bearer
+                        }
+                    });
+                    return  response.json();            
+                   
+                } catch (err) {
+                   console.log('err',err)
+                } 
             }
-        }
-        fetchFonction();
+            else {
+                try {
+                    const response = await fetch(requestURL, { 
+                        method: method, 
+                        headers: { 
+                            "Content-Type": "application/json",
+                        }, 
+                        body: JSON.stringify(body) });
+                    return  response.json();
+            
+                   
+                } catch (err) {
+                   console.log('err',err)
+                } 
+            }
+            break;
+        case 'PUT':
+            try {
+                const response = await fetch(requestURL, { 
+                    method: method, 
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "authorization": bearer
+                    },
+                    body: JSON.stringify(body) 
+                });
+                return  response.json();
         
-    }, [requestURL, method, payload]);
+               
+            } catch (err) {
+               console.log('err',err)
+            } 
+            break;    
+        default:
+            break;
+    }
 
-    return { data, isDataLoading, error };
+   
 
 };
 

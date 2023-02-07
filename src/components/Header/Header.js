@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import {Link} from 'react-router-dom'
 import logo from '../../assets/logo/argentBankLogo.png'
+import { deleteData } from "../../services/LocalStorage"
 import './Header.css'
 
 const Header = () => {
@@ -12,6 +13,7 @@ const Header = () => {
     const handleClick = (e) => {
         console.log("a cliqué")
         dispatch({ type: "auth/resetUser"})
+        deleteData('token')
     }
 
     const profileData = useSelector(state => state.auth.userInfo)

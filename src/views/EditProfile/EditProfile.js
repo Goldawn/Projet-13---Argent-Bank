@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import FetchData from "../../services/FetchData"
+import './EditProfile.css';
 
 const EditProfile = () => { 
 
@@ -27,35 +29,17 @@ const EditProfile = () => {
   // on créé un formData auquel on attache toutes les informations du profil utilisateur
   // cet objet est ensuite envoyé dans le corps de la requête d'édition des données du profil. 
   // Si la réponse est favorable, l'utilisateur est redirigé vers sa nouvelle page de profil
-  const submitHandler = e => {
+  const submitHandler = async e => {
     e.preventDefault()
     if(profileData.firstName === "" || profileData.lastName === "") {
       return;
     }
     else {
       const bearer = "Bearer "+token
-  
-      fetch('http://localhost:3001/api/v1/user/profile', {
-          method: 'PUT',
-          headers: { 
-              "Content-Type": "application/json",
-              "authorization": bearer
-            },
-          body: JSON.stringify(profileData)
-        })
-        .then((res) => {
-          if(res.status !== 200) {
-            return(res)
-          }
-          else {
-            res.json().then(data => {
-              dispatch({ type: "auth/editUserInfo", payload: { "firstName": data.body.firstName, "lastName": data.body.lastName }})
-              console.log(data)
-              return(data)
-            })
-            navigate('/profile')
-          }
-        })
+
+      const fetchedData = await FetchData('user/profile', 'PUT', {bearer: bearer, body: profileData})
+      await dispatch({ type: "auth/editUserInfo", payload: { "firstName": fetchedData.body.firstName, "lastName": fetchedData.body.lastName }})
+      navigate('/profile')
     }
 
 
@@ -64,18 +48,21 @@ const EditProfile = () => {
     const { firstName, lastName } = profileData;
 
       return (
-
-        <form id="form" onSubmit={submitHandler}>
-                
-          <div className="input-wrapper">
-            <label for="username">firstname</label><input type="text" value={firstName} name="firstName" id="firstName" onChange={changeHandler}></input>
-          </div>
-          <div className="input-wrapper">
-            <label for="password">lastname</label><input type="text" value={lastName} name="lastName" id="lastName" onChange={changeHandler}></input>
-          </div>
-          <button type="submit" className="sign-in-button">Submit</button>
-
-        </form>
+        <main className="main bg-dark">
+          <section className="edit-profile-content">
+            <i className="fa fa-user-circle sign-in-icon"></i>
+            <h1>Edit Profile</h1>
+              <form id="form" onSubmit={submitHandler}>
+                <div className="input-wrapper">
+                  <label htmlFor="username">firstname</label><input type="text" value={firstName} name="firstName" id="firstName" onChange={changeHandler}></input>
+                </div>
+                <div className="input-wrapper">
+                  <label htmlFor="password">lastname</label><input type="text" value={lastName} name="lastName" id="lastName" onChange={changeHandler}></input>
+                </div>
+                <button type="submit" className="sign-in-button">Submit</button>
+              </form>
+          </section>
+        </main>
     )
 
 }
