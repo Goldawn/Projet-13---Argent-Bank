@@ -34,7 +34,6 @@ const Form = () => {
     e.preventDefault()
 
     const fetchedData = await FetchData('user/login', 'POST', {body: login})
-    console.log("fetchedData", fetchedData)
     await  dispatch({ type: "auth/addUserToken", payload: fetchedData.body.token})
     saveData('token', fetchedData.body.token)
     navigate('/profile');

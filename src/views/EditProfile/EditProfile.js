@@ -23,7 +23,6 @@ const EditProfile = () => {
       [e.target.name]: e.target.value
     })
     )
-    console.log(typeof profileData.firstName)
   }
 
   // on créé un formData auquel on attache toutes les informations du profil utilisateur
@@ -43,7 +42,7 @@ const EditProfile = () => {
     }
 
 
-    }
+  }
 
     const { firstName, lastName } = profileData;
 

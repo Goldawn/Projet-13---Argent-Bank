@@ -11,7 +11,6 @@ const Header = () => {
     
 
     const handleClick = (e) => {
-        console.log("a cliqué")
         dispatch({ type: "auth/resetUser"})
         deleteData('token')
     }
