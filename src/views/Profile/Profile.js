@@ -8,8 +8,8 @@ import './Profile.css';
 const Profile = () => {
 
     const dispatch = useDispatch();
-    let token = useSelector(state => state.auth.userToken) ;
-    let tokenStore = loadData('token') ;
+    let token = useSelector(state => state.auth.userToken);
+    let tokenStore = loadData('token');
 
     const profileData = useSelector(state => state.auth.userInfo)
     const navigate = useNavigate();

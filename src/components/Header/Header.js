@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import {Link} from 'react-router-dom'
 import logo from '../../assets/logo/argentBankLogo.png'
-import { deleteData } from "../../services/LocalStorage"
+import { loadData, deleteData } from "../../services/LocalStorage"
+import FetchData from "../../services/FetchData"
 import './Header.css'
 
 const Header = () => {
     
     const dispatch = useDispatch();
-    
+    let token = useSelector(state => state.auth.userToken);
+    let tokenStore = loadData('token');
 
+    useEffect(() => {
+        if( token ) {
+            const bearer = "Bearer "+token
+            getData(bearer);
+        }
+        else if (tokenStore) {
+            const bearer = "Bearer "+tokenStore
+            getData(bearer);
+            dispatch({ type: "auth/addUserToken", payload: tokenStore})
+        }
+    }, [])
+
+    const getData = async (bearer) => {
+
+        const fetchedData = await FetchData('user/profile', 'POST', {bearer: bearer})
+        const { email, firstName, lastName } = await fetchedData.body
+        await dispatch({ type: "auth/addUserInfo", payload: { email: email, firstName: firstName, lastName: lastName}})        
+    }
+  
     const handleClick = (e) => {
         dispatch({ type: "auth/resetUser"})
         deleteData('token')
